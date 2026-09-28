@@ -1,5 +1,7 @@
 # Die Induktivitäten einer PMSM aus Geometrie und Werkstoffdaten
 
+<img src="Foto_Ralph_Wystup.jpg" align="right" width="140" alt="Prof. Dr.-Ing. Ralph Wystup">
+
 Prof. Dr.-Ing. Ralph Wystup M.Sc. — erstellt mit KI und Agent (Claude Code, Anthropic)
 
 Eine Maschine hat nicht eine Induktivität je Achse, sondern zwei, und sie sind verschieden. Welche von beiden gemeint ist, entscheidet sich an der Gleichung, in die sie eingesetzt wird. Wer die falsche nimmt, rechnet bei Sättigung um Faktoren daneben.
