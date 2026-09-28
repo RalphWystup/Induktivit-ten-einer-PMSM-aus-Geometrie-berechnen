@@ -1,0 +1,24 @@
+MIT-Lizenz
+
+Copyright (c) 2026 Ralph Wystup
+
+Hiermit wird unentgeltlich jeder Person, die eine Kopie dieser Software und der
+zugehörigen Dokumentation erhält, die Erlaubnis erteilt, sie uneingeschränkt zu
+nutzen, zu kopieren, zu verändern, zusammenzuführen, zu veröffentlichen, zu
+verbreiten, zu unterlizenzieren und zu verkaufen, unter den folgenden
+Bedingungen: Der obige Urheberrechtsvermerk und dieser Erlaubnisvermerk sind in
+allen Kopien oder wesentlichen Teilen der Software beizufügen.
+
+DIE SOFTWARE WIRD OHNE JEDE GEWÄHR BEREITGESTELLT.
+
+---
+
+Ausnahme: der Vernetzer „Triangle“
+
+Die Seite `PMSM_Rechner_2.7.html` enthält Triangle von Jonathan Richard Shewchuk
+(Carnegie Mellon University) als WebAssembly. Triangle ist urheberrechtlich
+geschützt und nach Angabe des Autors frei verfügbar, darf aber ohne gesonderte
+Lizenz weder verkauft noch in ein kommerzielles Erzeugnis aufgenommen werden.
+Für Lehre, Forschung und offene Veröffentlichung ist es frei, mit Quellenangabe.
+FEMM liefert dasselbe Programm unter denselben Bedingungen mit. Die
+WebAssembly-Hülle (triangle-wasm, Bruno Imbrizi) steht unter MIT.
