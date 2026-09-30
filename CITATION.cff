@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "Wenn Sie diese Arbeit verwenden, zitieren Sie sie bitte wie folgt."
+title: "Induktivitäten einer PMSM aus der Geometrie berechnen"
+abstract: "Eine Maschine hat je Achse zwei Induktivitäten, und sie sind verschieden. Wer die falsche nimmt, rechnet bei Sättigung um Faktoren daneben. Mit eigener Finite-Elemente-Rechnung im Browser."
+type: software
+authors:
+  - family-names: Wystup
+    given-names: Ralph
+    name-particle: ""
+    name-suffix: "Prof. Dr.-Ing., M.Sc."
+license: MIT
+url: "https://ralphwystup.github.io/Induktivit-ten-einer-PMSM-aus-Geometrie-berechnen/"
+repository-code: "https://github.com/RalphWystup/Induktivit-ten-einer-PMSM-aus-Geometrie-berechnen"
+date-released: "2026-09-30"
+keywords:
+  - PMSM
+  - Induktivität
+  - Sättigung
+  - FEM
+  - elektrische Maschinen
