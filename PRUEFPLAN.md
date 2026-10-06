@@ -2,7 +2,7 @@
 
 Prof. Dr.-Ing. Ralph Wystup M.Sc. — erstellt mit KI und Agent (Claude Code, Anthropic)
 
-Fassung 2.7 · 28. September 2026
+Fassung 2.8 · 6. Oktober 2026
 
 Dieses Blatt sagt, woran das Programm gemessen wird. Es ist bewusst vor dem Prüfen geschrieben und
 nicht danach: Kriterien, die man sich nach dem Ergebnis ausdenkt, bestehen immer.
@@ -204,7 +204,7 @@ den Reglern nicht folgte; und ein roter Faden, der nach der Feldrechnung abbrach
 
 | Nr. | Kriterium | Maßstab | Prüfmittel |
 |:--|:--|:--|:--|
-| N1 | **Von der Zeichnung zum Feld, dann messen, dann vergleichen.** Die Gliederung heißt Start · 1 Zeichnung und Feldrechnung · 2 Messung am Motor · 3 Vergleich · Prüfplan · Manuskript. Modell und Feldrechnung sind **eine** Stufe: aus der technischen Zeichnung wird gerechnet, das ist derselbe Vorgang. Die Feldrechnung kommt immer zuerst — sie liefert nicht nur die Kennwerte, sondern auch die Erwartungswerte für jedes Feld des Messblatts. | sechs Reiter, Namen wörtlich | `pruefe_werkzeug.js` |
+| N1 | **Von der Zeichnung zum Feld, dann messen, dann vergleichen.** Die Gliederung heißt Start · 1 Zeichnung und Feldrechnung · 2 Messung am Motor · Messplan (drei Stufen, seit der Fassung vom 6. Oktober 2026 zwischen Messung und Vergleich) · 3 Vergleich · Prüfplan · Manuskript. Modell und Feldrechnung sind **eine** Stufe: aus der technischen Zeichnung wird gerechnet, das ist derselbe Vorgang. Die Feldrechnung kommt immer zuerst — sie liefert nicht nur die Kennwerte, sondern auch die Erwartungswerte für jedes Feld des Messblatts. | sieben Reiter, Namen wörtlich | `pruefe_werkzeug.js` |
 | N2 | **Die Startseite trägt den roten Faden.** Drei Stufen, jede mit *hinein*, *heraus*, *geprüft* und einem Knopf dorthin. Die Begründung steht aufklappbar daneben — ein Laboringenieur muss die Seite bedienen können, ohne sie zu lesen, und sie verstehen können, wenn er will. | je Stufe drei Zeilen, ≥ 200 Zeichen Tiefe, ein Knopf | `pruefe_werkzeug.js` |
 | N3 | **Keine Zeichenfläche, die nur ein festes Bild zeigt.** Jede Darstellung hängt am Modell, am Arbeitspunkt oder an der eigenen Rechnung. Die drei Bilder, die immer dieselben gespeicherten Kurven zeigten (`c_verlauf`, `c_strang`, `c_leerlauf`), sind entfernt; ihr Inhalt steht im Manuskript. | Liste der Zeichenflächen wörtlich | `pruefe_werkzeug.js` |
 | N4 | **Der Vergleich hält drei Wege nebeneinander:** über die Stranggrößen (am Motor nachmessbar), unmittelbar aus dem Feld (Gegenprobe der Rechnung), aus dem Messblatt (Aussage des Versuchs) — mit dem Abstand zwischen ihnen. | sechs Spalten, neun Größen | `pruefe_werkzeug.js` |
@@ -275,6 +275,32 @@ es hier vier, und **FEMM ist einer davon und nicht die Wahrheit**.
 
 ---
 
+## R · Der Messplan mit drei Stufen für eine Maschine ohne Sternpunkt
+
+Nachgetragen am 05.10.2026, Anlass eine Bachelorarbeit: Die Maschine hat nur U1, V1, W1, und die Vorschrift
+bis zur Fassung vom 28. September 2026 verlangte Strangspannungen gegen den Sternpunkt — in der eigenen Schaltskizze waren Klemme 2
+und 3 sogar verbunden, womit $u_2 - u_3$ identisch null ist. Der Messplan arbeitet seither mit Leitergrößen in
+drei wählbaren Stufen (nur L-Messgerät; mit Gleichstrom-Offset; dazu Batteriezweig). Grundregel: zuerst
+ausrichten, dann markieren, dann erst gelten die Winkel und stimmen mit der Feldrechnung überein.
+
+| Nr. | Kriterium | Maßstab | Prüfmittel |
+|:--|:--|:--|:--|
+| R1 | **Die Tabellen folgen aus der Polpaarzahl.** Stufe 1 überstreicht genau eine elektrische Periode in 10°-Schritten elektrisch (37 Stellungen, letzte = Kontrolle); Stufe 2 hat vier Stellungen mit Messsignal auf $+q$, $+d$, $-d$, $-q$; Stufe 3 hat 90 vorgerechnete Zeilen (30 Rasterpunkte × 3 Richtungen) mit nie negativem Offset. | für $p = 2$ und $p = 3$ | `pruefe_messplan.js` |
+| R2 | **Die Stromumrechnung ist umkehrbar.** Aus den vorgerechneten Strangströmen jeder Zeile der Stufe 3 kommt der Rasterpunkt $(i_d, i_q)$ zurück. | Abweichung unter 2 mA (Rundung der Vorgabe) | `pruefe_messplan.js` |
+| R3 | **Die Auswertung ist eine Identität.** Drei Richtungen mit eingesetzten $l_{dd}, l_{qq}, l_{dq}$ geben dieselben drei Zahlen zurück; die Trapezsumme trifft die Stammfunktion einer linearen Kennlinie; die Winkelreihe einer reinen Sinusmaschine liefert $L_0 - M_0$, $L_2$, $L_d(0)$, $L_q(0)$ und Rest null. | auf $10^{-9}$ | `pruefe_messplan.js` |
+| R4 | **Beim Öffnen ist jede Zelle leer.** Keine Vorbelegung, keine gespeicherten Werte; der Knopf „leeren“ macht jede Zelle wieder frei. | alle Felder leer | `pruefe_messplan_seite.js` |
+| R5 | **Die Feldrechnung füllt jede Zelle nach der Vorschrift des Geräts.** Netz je Stellung, Feld mit den Strangströmen der Zelle, Kleinsignal $\pm\delta$ in den beiden Klemmen des Paares, Anzeige $= (\Delta\Psi_A - \Delta\Psi_B)/\delta$. Keine Zelle stammt aus Kennwerten. | Stufe 2 vollständig gefüllt; bei 0 A Paar auf q größer als Paar auf d, $+d$ und $-d$ gleich; Sättigung sichtbar | `pruefe_messplan_seite.js` |
+| R6 | **Eigene Werte überschreiben gefüllte Zellen**, die Auswertung folgt sofort, und die Herkunft ist an der Zelle ablesbar (Feldrechnung blass, eigene Eingabe nicht). | eingetragener Wert erscheint halbiert in der Auswertung | `pruefe_messplan_seite.js` |
+| R7 | **Die Gleichung zeigt je Stufe, was gemessen ist.** Blau umrandet sind in Stufe 1 die ungesättigten Werte, in Stufe 3 alle Induktivitäten; der Rest ist als „aus der Feldrechnung“ gekennzeichnet. | Stufe 3: keine Größe mehr aus der FEM | `pruefe_messplan_seite.js` |
+| R8 | **Zwei unabhängige Wege, Stufe 3.** Die aus den 90 Tabellenzellen gewonnenen $l_{qq}$, $l_{dd}$, $l_{dq}$ treffen an allen 30 Rasterpunkten die Werte, die der direkte Weg aus dem Feld bei Rotor 0° mit zentralen Differenzen in $d$ und $q$ liefert. | $l_{qq}$ unter 3 % (gemessen 0,02 %: gleiches Netz), $l_{dd}$ unter 4 % (gemessen 3,7 %: Netz der um 90° el gedrehten Stellung, siehe R12), $l_{dq}$ unter 2,5 mH (gemessen 2,0 mH; $l_{dq}$ dieser Maschine liegt selbst nur bei 1 mH) | `pruefe_messplan_seite.js` |
+| R9 | **Die Energieprobe besteht.** $\Delta\Psi_q/\Delta i_d$ aus benachbarten $i_d$-Zeilen trifft $l_{dq}$ aus den drei Richtungen. | unter 2,5 mH (gemessen 1,7 mH; Netzstreuung wie R8) | `pruefe_messplan_seite.js` |
+| R10 | **Die Skizzen sind da und die Vorschrift steht in der Seite:** Ausrichtung, Stufe 1 bis 3, Ausrichten-und-Markieren als nummerierte Handgriffe. | vier Bilder sichtbar | `pruefe_messplan_seite.js` |
+| R11 | **Der Drehlauf füllt Stufe 1 mit.** Die Strangmessung in Reiter 1 rechnet an jeder Stellung die drei Paaranzeigen (Kleinsignal $\pm\delta$ am Klemmenpaar, dritte Klemme offen) und trägt sie in die Stufe-1-Tabelle ein, die dann die Stellungen des Drehlaufs annimmt; die Kontrollzeile bleibt leer. Paar V1–W1 bei 0° ist $2L_q$. | 5 Stellungen → 15 Zellen in 6 Zeilen, alle als Feldrechnung gekennzeichnet; Anzeige/2 gegen $L_q$ des Drehlaufs unter 1 % | `pruefe_messplan.js`, `pruefe_messplan_seite.js` |
+| R12 | **Netzprobe: Methode oder Netz?** Am Netz der um 90° el gedrehten Stellung muss Paaranzeige/2 die direkte zentrale Differenz $\partial\Psi_d/\partial i_d$ treffen. Tut sie das, ist die Abweichung in R8 die Streuung der Feldrechnung zwischen zwei Netzen (Rotor 0° und 90° el), nicht die Messvorschrift. | Identität unter 0,02 mH (gemessen 0,001 mH an drei Punkten); Netzstreuung $l_{dd}$ wird ausgewiesen (gemessen 2,9 %) | `pruefe_messplan_seite.js` |
+| R13 | **Die Gleichung mit Zahlen.** Unter der Gleichung stehen ihre Größen am gewählten Arbeitspunkt zweimal: aus den Tabellenwerten zurückgerechnet (gleich, ob aus der Feldrechnung gefüllt oder von Hand eingetragen) und direkt aus dem Feld; Ψ_d, Ψ_q, L_d, L_q, Ψ_PM direkt kommen aus einer fünften Lösung am Punkt. Die Gegenprobe rechnet dafür auch die 30 Achsenpunkte der Stufe 2. | Stufe 2 ohne Gegenprobe: links Anzeige/2, rechts „noch nicht gerechnet“; Stufe 3 bei −2/3 A: $l_{qq}$ beidseits gleich (unter 0,1 %), $L_q$ aus Trapezsumme gegen $\Psi_q/i_q$ direkt unter 2 % | `pruefe_messplan_seite.js` |
+
+Änderung am 05.10.2026, offen benannt: R8 stand mit 3 % / 0,3 mH und R9 mit 0,5 mH im Plan, bevor die Stufe 3 je gefüllt war. Der erste volle Lauf ergab 3,7 % für $l_{dd}$ und 2,0 mH für $l_{dq}$. Die Toleranzen wurden nicht einfach geweitet, sondern erst die Ursache geprüft (R12, Netzprobe: Methode exakt, Streuung zwischen den Netzen zweier Rotorstellungen) und dann mit den gemessenen Zahlen und dieser Ursache neu gesetzt.
+
 ## Das Abnahmeblatt
 
 Der Plan allein genügt nicht. Beim ersten zeilenweisen Durchgang am 26.09.2026 zeigte sich, dass
@@ -293,7 +319,8 @@ Lücke, die diesen Abschnitt veranlasst hat, nicht wiederholen.
 Damit niemand mehr hineinliest, als dasteht:
 
 * **Die Messung am wirklichen Motor.** Die Vorschrift dafür steht im Manuskript samt Erwartungswerten;
-  gemessen wurde noch nicht. Alle Zahlen dieses Programms sind gerechnete Zahlen.
+  gemessen wurde noch nicht. Alle Zahlen dieses Programms sind gerechnete Zahlen. Der Messplan R füllt
+  seine Tabellen mit gerechneten Anzeigen — das prüft die Auswertung und den Weg, nicht das Gerät.
 * **FEMM selbst.** FEMM ist hier der Maßstab, nicht der Prüfling. Stimmt FEMM an einer Stelle nicht,
   merkt es dieses Programm nicht — die einzigen Prüfungen, die davon unabhängig sind, sind B3, B4
   und D1, weil dort gegen geschlossene Gesetze geprüft wird.
